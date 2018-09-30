@@ -4,7 +4,7 @@ import {StorageService} from './storage.service'
   providedIn: 'root'
 })
 export class ShareService   {
-  user = false;
+  user: any = false;
   constructor(private storage: StorageService) { 
     this.user = this.storage.getUser();
   }

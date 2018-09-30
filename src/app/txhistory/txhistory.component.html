@@ -1,3 +1,26 @@
-<p>
-  txhistory works!
-</p>
+<table class="table ">
+    <thead>
+      <tr>
+          
+        <th scope="col"></th>
+        <th scope="col">#</th>
+        <th scope="col">Time</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Confirmations</th>
+        <th scope="col">action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor ='let tx of txs' [ngClass] = "{
+          'table-success': tx.type =='received',
+           'table-danger' : tx.type == 'send'
+                    }">
+        <th  >{{tx.type}} - {{tx.address}}</th>
+        <td >{{tx.block_height}}</td>
+        <td>{{tx.date}}</td>
+        <td>{{tx.total}} BTC</td>
+        <td>{{tx.confirmations}}</td>
+        <td><a href = 'https://live.blockcypher.com/btc-testnet/tx/{{tx.hash}}' target='_blank'> View</a> </td>
+      </tr>
+    </tbody>
+  </table>

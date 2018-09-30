@@ -14,6 +14,10 @@ export class HttpService {
     })
   }
   get(url) {
-
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(this.mock.API['get'][url])
+      }, 300)
+    })
   }
 }
