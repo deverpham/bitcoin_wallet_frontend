@@ -3,6 +3,8 @@ import {HttpService} from '../http.service'
 import {BitcoinService} from '../services/bitcoin.service';
 import * as filter from 'loopback-filters';
 import * as shuffle from 'shuffle-array';
+import {ShareService} from '../services/share.service'
+import {environment} from '../../environments/environment'
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -10,18 +12,28 @@ import * as shuffle from 'shuffle-array';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private http: HttpService, private bitcoin : BitcoinService) { }
+  constructor(
+    private http: HttpService,
+     private bitcoin : BitcoinService,
+     private share: ShareService) {
+        if(environment.node == 'mainnet') {
+          this.detailUrl  = 'https://live.blockcypher.com/btc/tx/'
+        } else {
+          this.detailUrl =  'https://live.blockcypher.com/btc-testnet/tx/'
+        }
+      }
   txs: any =  [];
+  detailUrl = ''
   totalUsers: any = 0;
   btcSent:any = 0;
   onlines:any = 0;
   ngOnInit() {
-    this.http.get('/analytics')
+    this.http.getToBackend('/analytics', this.share.user.token)
       .then((result:any ) => {
-        this.totalUsers = result.registers
-        this.btcSent  = result.btcSent;
-        this.onlines = result.onlines;
-        this.getTxs(result.wallets);
+        this.totalUsers = result.payload.total
+        this.btcSent  = 0;
+        this.onlines = 0;
+        this.getTxs(result.payload.wallets);
       })
   }
   getTxs(users) {

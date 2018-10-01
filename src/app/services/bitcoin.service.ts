@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, ResponseContentType } from '@angular/http';
+import {environment} from '../../environments/environment'
 @Injectable({
   providedIn: 'root'
 })
@@ -20,12 +21,24 @@ export class BitcoinService {
     })
 }
   getWalletInformation(address) {
-    return this.get(`https://api.blockcypher.com/v1/btc/test3/addrs/${address}/full?limit=1`)
+    let url = ''
+    if(environment.node =='mainnet') {
+      url = `https://api.blockcypher.com/v1/btc/main/addrs/${address}/full?limit=1`
+    } else {
+      url =`https://api.blockcypher.com/v1/btc/test3/addrs/${address}/full?limit=1`
+    }
+    return this.get(url)
   }
   getTxsList(address) {
+    let url  = '';
+    if(environment.node =='mainnet') {
+      url = `https://api.blockcypher.com/v1/btc/main/addrs/${address}/full?limit=1000`
+    } else {
+      url =`https://api.blockcypher.com/v1/btc/test3/addrs/${address}/full?limit=1000`
+    }
     return new Promise((resolve, reject) => {
       this
-      .get(`https://api.blockcypher.com/v1/btc/test3/addrs/${address}/full?limit=1000`)
+      .get(url)
       .then((result: any) =>  {
           const {txs} =result;
           resolve(txs)

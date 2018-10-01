@@ -12,6 +12,9 @@ import {FormsModule} from '@angular/forms';
 import { SendComponent } from './send/send.component';
 import {HttpModule} from '@angular/http';
 import { TxhistoryComponent } from './txhistory/txhistory.component';
+import { RetypepasswordDirective } from './directives/retypepassword.directive';
+import { AmountDirective } from './directives/amount.directive';
+import { AddressDirective } from './directives/address.directive';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,11 +23,16 @@ import { TxhistoryComponent } from './txhistory/txhistory.component';
     RegisterComponent,
     DashboardComponent,
     SendComponent,
-    TxhistoryComponent
+    TxhistoryComponent,
+    RetypepasswordDirective,
+    AmountDirective,
+    AddressDirective
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {
+      useHash: true
+    }),
     FormsModule,
     CommonModule,
     HttpModule

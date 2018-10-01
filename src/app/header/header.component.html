@@ -12,9 +12,9 @@
         <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item" [routerLinkActive] = "['active']">
-        <a class="nav-link" [routerLink]="['/login']">Login</a>
+        <a class="nav-link" [routerLink]="['/login']" *ngIf='!share.user'>Login</a>
       </li>
-      <li class="nav-item" [routerLinkActive] = "['active']">
+      <li class="nav-item" [routerLinkActive] = "['active']" *ngIf='!share.user'>
         <a class="nav-link disabled" [routerLink] = "['/register']">Sign Up</a>
       </li>
       <li class="nav-item" [routerLinkActive] = "['active']">

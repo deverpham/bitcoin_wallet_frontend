@@ -20,7 +20,7 @@
       <td>{{tx.date}}</td>
       <td>{{tx.total}} BTC</td>
       <td>{{tx.confirmations}}</td>
-      <td><a href = 'https://live.blockcypher.com/btc-testnet/tx/{{tx.hash}}' target='_blank'> View</a> </td>
+      <td><a href = '{{detailUrl}}{{tx.hash}}' target='_blank'> View</a> </td>
     </tr>
   </tbody>
 </table>
@@ -31,6 +31,7 @@
       <p class="card-text">{{totalUsers}}</p>
     </div>
   </div>
+  <!--
   <div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">Total Users Online</h5>
@@ -43,4 +44,5 @@
       <p class="card-text">{{btcSent}}</p>
     </div>
   </div>
+  <-->
 </div>

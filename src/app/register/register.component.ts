@@ -16,21 +16,38 @@ export class RegisterComponent implements OnInit {
     private storage: StorageService,
     private share: ShareService) { }
   loading = false;
+  showError = false;
+  error = {
+    message: ''
+  }
   user:User = {
     email :'',
-    phone_number: '',
+    phonenumber: '',
     password: '',
     re_password : ''
   }
 
   submit() {
     this.loading = true;
-    this.http.post('/register', this.user)
-      .then(result => {
-        this.storage.saveUser(result)
-        this.share.updateUser(result)
+    this.http.postToBackend('/register', this.user)
+      .then((result: any) => {
+        const user = result.payload;
+        this.storage.saveUser(user)
+        this.share.updateUser(user)
         this.loading = false;
         this.router.navigate(['/dashboard'])
+      })
+      .catch(err => {
+        console.log(err.status)
+        if(err.status == 422) {
+          this.showError = true;
+          this.loading = false;
+          this.error.message = "Please enter required field"
+        }  else {
+          this.showError = true;
+          this.loading  = false;
+          this.error.message = JSON.parse(err._body).payload;
+        }
       })
   }
 
@@ -47,5 +64,5 @@ interface User {
   email: String,
   password: String,
   re_password:String,
-  phone_number: String
+  phonenumber: String
 }

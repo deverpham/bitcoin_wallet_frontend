@@ -4,7 +4,7 @@
       <img  class='img-fluid m-auto' src = "{{'https://chart.googleapis.com/chart?cht=qr&chl=bitcoin:' + user.wallet + '&choe=UTF-8&chs=200x200'}}"/>
     </div>
     <p  class='addr'>{{user.wallet}}</p>
-    <button class='btn btn-info btn-sm m-auto '>Copy Wallet Address</button>
+    <button class='btn btn-info btn-sm m-auto ' (click) = "copyToClipboard(user.wallet)">Copy Wallet Address</button>
   </div>
   <div class='col-lg-4'>
     <div class='last_trade'>
@@ -13,28 +13,84 @@
           <img  class='img-fluid'src= 'assets/loading.gif' /> 
         </div>
       <div *ngIf ='lastTrade' class='detail'>
-        <p><span class='field'>Tx: {{lastTrade.type}}</span></p>
-        <p><span class='field'>Amount: {{lastTrade.total}}</span></p>
-        <p><span class='field'>Tx Date: {{lastTrade.date}}</span></p>
-        <p><span class='field'>{{lastTrade.lable}}: {{lastTrade.address}}</span></p>
+        <div *ngIf='lastTrade.type'>
+          
+          <p><span class='field'>Tx: {{lastTrade.type}}</span></p>
+          <p><span class='field'>Amount: {{lastTrade.total}}</span></p>
+          <p><span class='field'>Tx Date: {{lastTrade.date}}</span></p>
+          <p><span class='field'>{{lastTrade.lable}}: {{lastTrade.address}}</span></p>
+        </div>
+        <div *ngIf='!lastTrade.type'>
+          <p>Dont Have Transaction</p>
+        </div>
       </div>
     </div>
 
   </div>
   <div class='col-lg-4'>
-    <form action="">
+    <form action="" #f = 'ngForm' name='sendForm' (ngSubmit) = "f.form.valid && send()">
       <legend>Send </legend>
-      <div class='form-group'>
-        <label for="address">Address: </label>
-        <input type="text" id ='address'  class='form-control'>
+      <div class='input-wrap row'>
+          <div class='form-group w-100'>
+              <label for="address">Address: </label>
+              <input 
+              type="text" 
+              id ='address'  
+              required
+              name='address' 
+              class='form-control'  
+              [(ngModel)] ='sendData.address'
+              [appAddress] = 'user.wallet'
+              #address = "ngModel">
+          </div>
+            <!--validate Address-->
+          <div  *ngIf=' f.submitted && address.invalid' class="alert alert-danger mt-1 col-12" role="alert">
+              <div *ngIf="address.errors.required">
+                <small>Address is required.</small>
+              </div>
+              <div *ngIf="address.errors.appAddress">
+                  <small>You cant send to your wallet</small>
+                </div>
+          </div>
       </div>
-      <div class='form-group'>
-          <label for="address">Amount:</label>
-          <input type="text" id ='address'  class='form-control'>
-        </div>
+      
+      <div class='input-wrap row'> 
+          <div class='form-group w-100'>
+              <label for="amount">Amount:</label>
+              <input
+                 type="text" 
+                 id ='amount'   
+                 name='amount' 
+                 [(ngModel)] ='sendData.amount' 
+                 class='form-control'
+                 required
+                 #amount ="ngModel"
+                 [appAmount] = "balance"
+                 >
+            </div>
+             <!--validate Address-->
+          <div  *ngIf=' f.submitted && amount.invalid' class="alert alert-danger mt-1 col-12" role="alert">
+              <div *ngIf="amount.errors.required">
+                <small>Amount is required.</small>
+              </div>
+              <div *ngIf="amount.errors.appAmount">
+                  <small>Amount need to different 0 and less than your balance.</small>
+                </div>
+          </div>
+      </div>
+
+      <div  *ngIf='loading'class='loading'>
+          <img  class='img-fluid'src= 'assets/loading.gif' /> 
+        </div>        
+        <div  *ngIf='showError' class=" alert alert-danger mt-2" role="alert">
+            {{error.message}}
+        </div> 
+        <div  *ngIf='showResult' class=" alert alert-success mt-2" role="alert">
+            {{result.message}}
+        </div>   
         <div class='d-flex justify-content-center'>
 
-        <button class='btn btn-success m-auto w-25'>Send</button>
+        <button class='btn btn-success m-auto w-25' type = "submit">Send</button>
         </div>
     </form>
   </div>

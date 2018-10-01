@@ -10,6 +10,10 @@ import {StorageService} from '../services/storage.service'
 })
 export class LoginComponent implements OnInit {
   loading = false;
+  showError = false;
+  error = { 
+    message: ''
+  }
   user: User  =  {
     email: '',
     password: ''
@@ -28,12 +32,18 @@ export class LoginComponent implements OnInit {
 
   submit() {
     this.loading = true;
-    this.http.post('/login', this.user)
-      .then(result => {
-        this.storage.saveUser(result);
-        this.share.updateUser(result);
+    this.http.postToBackend('/login', this.user)
+      .then((result: any) => {
+        const user = result.payload;
+        this.storage.saveUser(user);
+        this.share.updateUser(user);
         this.loading = false;
         this.router.navigate(['dashboard'])
+      })
+      .catch(err => {
+          this.loading = false;
+          this.showError = true;
+          this.error.message = JSON.parse(err._body).payload;
       })
   }
 
