@@ -12,7 +12,7 @@ export class HeaderComponent implements OnInit {
     private storage: StorageService, 
     private router: Router, 
     private change: ChangeDetectorRef,
-    private share: ShareService) { }
+    public share: ShareService) { }
 
   logout() {
     this.storage.destroyUser();
